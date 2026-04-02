@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador de Reparación — Gofablet</title>
+
+  <!-- =============================================
+       META PIXEL — Pixel ID: 1143337055789110
+       ============================================= -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1143337055789110');
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1143337055789110&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- END META PIXEL -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:       #0057FF;
+      --brand-light: #E8F0FF;
+      --brand-dark:  #0040CC;
+      --accent:      #00C2FF;
+      --success:     #00C48C;
+      --text:        #0D0F1A;
+      --muted:       #6B7280;
+      --border:      #E5E7EB;
+      --bg:          #F8F9FC;
+      --white:       #FFFFFF;
+      --radius:      14px;
+      --radius-sm:   8px;
+      --shadow:      0 2px 12px rgba(0,0,0,.08);
+      --shadow-md:   0 4px 24px rgba(0,0,0,.12);
+      --transition:  .2s cubic-bezier(.4,0,.2,1);
+    }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 60px;
+    }
+
+    /* ── Logo / Header ── */
+    .header {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--brand);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: white; }
+    .logo-name {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .badge-secure {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 10px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .badge-secure svg { width: 11px; height: 11px; }
+
+    /* ── Progress Bar ── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 28px;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .progress-label {
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: color var(--transition);
+    }
+    .progress-label.active { color: var(--brand); }
+    .progress-track {
+      height: 5px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      border-radius: 99px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--brand-light);
+      color: var(--brand);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 99px;
+      padding: 4px 10px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .card-subtitle {
+      font-size: .875rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .card-body { padding: 24px 32px 28px; }
+
+    /* ── Steps ── */
+    .step { display: none; animation: fadeIn .25s ease; }
+    .step.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    /* ── Device Grid ── */
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .device-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: var(--white);
+      position: relative;
+    }
+    .device-card:hover {
+      border-color: var(--brand);
+      background: var(--brand-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .device-card.selected {
+      border-color: var(--brand);
+      background: var(--brand-light);
+    }
+    .device-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 10px; right: 12px;
+      width: 20px; height: 20px;
+      background: var(--brand);
+      color: white;
+      border-radius: 50%;
+      font-size: .65rem;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 20px;
+    }
+    .device-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; }
+    .device-name {
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .device-hint {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Search Input ── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--brand); background: white; }
+    .search-input::placeholder { color: var(--muted); }
+
+    /* ── Brand / Model Lists ── */
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .brand-btn {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--white);
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .brand-btn:hover { border-color: var(--brand); background: var(--brand-light); }
+    .brand-btn.selected { border-color: var(--brand); background: var(--brand-light); }
+    .brand-logo { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .brand-label { font-size: .72rem; font-weight: 700; color: var(--text); }
+
+    .model-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .model-btn {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      text-align: left;
+      cursor: pointer;
+      background: var(--white);
+      font-family: inherit;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all var(--transition);
+    }
+    .model-btn:hover { border-color: var(--brand); background: var(--brand-light); }
+    .model-btn.selected { border-color: var(--brand); background: var(--brand-light); }
+    .model-btn .chevron { color: var(--muted); font-size: .8rem; }
+
+    .section-label {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+    .back-btn-sm {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .8rem; font-weight: 600; color: var(--brand);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; padding: 0; margin-bottom: 14px;
+    }
+
+    /* ── Service Cards ── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .service-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      cursor: pointer;
+      background: var(--white);
+      transition: all var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .service-card:hover { border-color: var(--brand); background: var(--brand-light); }
+    .service-card.selected { border-color: var(--brand); background: var(--brand-light); }
+    .service-card.selected .service-check { opacity: 1; }
+    .service-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+    .service-info { flex: 1; min-width: 0; }
+    .service-name { font-size: .825rem; font-weight: 700; margin-bottom: 2px; }
+    .service-desc { font-size: .7rem; color: var(--muted); line-height: 1.3; }
+    .service-check {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--brand);
+      color: white;
+      font-size: .6rem;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    /* ── Form Fields ── */
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .field input:focus { border-color: var(--brand); background: white; }
+    .field input::placeholder { color: #9CA3AF; }
+    .field-hint { font-size: .7rem; color: var(--muted); margin-top: 4px; }
+
+    .phone-wrap { display: flex; gap: 8px; }
+    .phone-prefix {
+      flex-shrink: 0;
+      padding: 12px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      font-family: inherit;
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 72px;
+      text-align: center;
+    }
+
+    /* ── Summary Box ── */
+    .summary-box {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .summary-title {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: .82rem;
+    }
+    .summary-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .summary-key { color: var(--muted); font-weight: 500; }
+    .summary-val { font-weight: 700; color: var(--text); }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--brand);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: -.01em;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,87,255,.3);
+    }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-primary.loading::after {
+      content: '';
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 12px;
+    }
+    .btn-back:hover { border-color: var(--brand); color: var(--brand); }
+
+    .btn-row { display: flex; gap: 10px; flex-direction: column; }
+
+    /* ── Thank You ── */
+    .thanks-wrap { text-align: center; padding: 40px 32px; }
+    .thanks-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--success), #00A878);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+      box-shadow: 0 8px 24px rgba(0,196,140,.3);
+    }
+    .thanks-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+      margin-bottom: 10px;
+    }
+    .thanks-sub {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 360px;
+      margin: 0 auto 28px;
+    }
+    .thanks-highlights {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .thanks-chip {
+      background: var(--brand-light);
+      color: var(--brand);
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 99px;
+    }
+
+    /* ── Trust Bar ── */
+    .trust-bar {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ── Scrollbar ── */
+    .brand-grid::-webkit-scrollbar,
+    .model-list::-webkit-scrollbar { width: 4px; }
+    .brand-grid::-webkit-scrollbar-track,
+    .model-list::-webkit-scrollbar-track { background: transparent; }
+    .brand-grid::-webkit-scrollbar-thumb,
+    .model-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Error ── */
+    .error-msg {
+      color: #EF4444;
+      font-size: .78rem;
+      font-weight: 600;
+      margin-top: 10px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .card-header, .card-body { padding-left: 20px; padding-right: 20px; }
+      .brand-grid { grid-template-columns: repeat(3, 1fr); }
+      .service-grid { grid-template-columns: 1fr; }
+      .device-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Header -->
+  <header class="header">
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C7.03 2 3 6.03 3 11c0 2.76 1.24 5.24 3.2 6.93V21h2v-2h7.6v2h2v-3.07A8.94 8.94 0 0 0 21 11c0-4.97-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm1-11h-2v5l4 2.4.8-1.4-2.8-1.7V7z"/>
+        </svg>
+      </div>
+      <span class="logo-name">Gofablet</span>
+    </a>
+    <div class="badge-secure">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Cotización segura
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span class="progress-label active" id="lbl1">Dispositivo</span>
+      <span class="progress-label" id="lbl2">Equipo</span>
+      <span class="progress-label" id="lbl3">Servicio</span>
+      <span class="progress-label" id="lbl4">Contacto</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:25%"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="mainCard">
+
+    <!-- STEP 1: Dispositivo -->
+    <div class="step active" id="step1">
+      <div class="card-header">
+        <div class="step-chip">Paso 1 de 4</div>
+        <h1 class="card-title">¿Qué dispositivo necesitas reparar?</h1>
+        <p class="card-subtitle">Selecciona el tipo de dispositivo para comenzar</p>
+      </div>
+      <div class="card-body">
+        <div class="device-grid">
+          <div class="device-card" onclick="selectDevice('Teléfono')">
+            <span class="device-icon">📱</span>
+            <div class="device-name">Teléfono</div>
+            <div class="device-hint">iPhone, Samsung, Xiaomi...</div>
+          </div>
+          <div class="device-card" onclick="selectDevice('Tablet')">
+            <span class="device-icon">📟</span>
+            <div class="device-name">Tablet</div>
+            <div class="device-hint">iPad, Galaxy Tab, Lenovo...</div>
+          </div>
+          <div class="device-card" onclick="selectDevice('Computadora')">
+            <span class="device-icon">💻</span>
+            <div class="device-name">Computadora</div>
+            <div class="device-hint">MacBook, Dell, HP, Lenovo...</div>
+          </div>
+          <div class="device-card" onclick="selectDevice('Smartwatch')">
+            <span class="device-icon">⌚</span>
+            <div class="device-name">Smartwatch</div>
+            <div class="device-hint">Apple Watch, Galaxy Watch...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Marca + Modelo -->
+    <div class="step" id="step2">
+      <div class="card-header">
+        <div class="step-chip">Paso 2 de 4</div>
+        <h1 class="card-title">¿Cuál es tu <span id="step2DeviceName">dispositivo</span>?</h1>
+        <p class="card-subtitle">Primero elige la marca y luego el modelo</p>
+      </div>
+      <div class="card-body">
+        <!-- Brand picker -->
+        <div id="brandPicker">
+          <button class="back-btn-sm" onclick="goToStep(1)">← Cambiar dispositivo</button>
+          <div class="section-label">Selecciona la marca</div>
+          <div class="search-wrap">
+            <span class="search-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            <input class="search-input" type="text" id="brandSearch" placeholder="Buscar marca..." oninput="filterBrands(this.value)">
+          </div>
+          <div class="brand-grid" id="brandGrid"></div>
+        </div>
+
+        <!-- Model picker -->
+        <div id="modelPicker" style="display:none">
+          <button class="back-btn-sm" onclick="showBrandPicker()">
+            ← Cambiar marca
+          </button>
+          <div class="section-label" id="modelSectionLabel">Modelos disponibles</div>
+          <div class="search-wrap">
+            <span class="search-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            <input class="search-input" type="text" id="modelSearch" placeholder="Buscar modelo..." oninput="filterModels(this.value)">
+          </div>
+          <div class="model-list" id="modelList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Tipo de reparación -->
+    <div class="step" id="step3">
+      <div class="card-header">
+        <div class="step-chip">Paso 3 de 4</div>
+        <h1 class="card-title">¿Qué necesitas reparar?</h1>
+        <p class="card-subtitle">Tu <span id="step3DeviceSummary" class="font-bold"></span></p>
+      </div>
+      <div class="card-body">
+        <p id="serviceCounter" style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:10px;">Puedes elegir hasta 3 reparaciones</p>
+        <div class="service-grid" id="serviceGrid"></div>
+        <p class="error-msg" id="serviceError">Por favor selecciona al menos una reparación</p>
+        <br>
+        <div class="btn-row">
+          <button class="btn-primary" id="step3Next" onclick="goToStep4()">
+            Continuar →
+          </button>
+          <button class="btn-back" onclick="goToStep(2)">← Cambiar equipo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Datos de contacto -->
+    <div class="step" id="step4">
+      <div class="card-header">
+        <div class="step-chip">Paso 4 de 4 — Casi listo</div>
+        <h1 class="card-title">¿A dónde enviamos tu cotización?</h1>
+        <p class="card-subtitle">Recibirás el precio exacto en minutos</p>
+      </div>
+      <div class="card-body">
+        <!-- Summary -->
+        <div class="summary-box">
+          <div class="summary-title">Tu solicitud</div>
+          <div class="summary-row">
+            <span class="summary-key">Dispositivo</span>
+            <span class="summary-val" id="sumDevice">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-key">Equipo</span>
+            <span class="summary-val" id="sumModel">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-key">Reparación</span>
+            <span class="summary-val" id="sumService">—</span>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="field">
+          <label for="inputName">Tu nombre completo *</label>
+          <input type="text" id="inputName" placeholder="Ej. María García" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="inputPhone">Tu número de WhatsApp *</label>
+          <div class="phone-wrap">
+            <div class="phone-prefix">🇬🇹 +502</div>
+            <input type="tel" id="inputPhone" placeholder="5555-1234" maxlength="15" autocomplete="tel">
+          </div>
+          <div class="field-hint">Te contactaremos por aquí con la cotización</div>
+        </div>
+
+        <p class="error-msg" id="formError">Por favor completa nombre y teléfono</p>
+
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn-primary" id="submitBtn" onclick="submitForm()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.81 19.79 19.79 0 0 1 1.61 1.16 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Recibir cotización por WhatsApp
+          </button>
+          <button class="btn-back" onclick="goToStep(3)">← Cambiar reparación</button>
+        </div>
+        <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5">
+          Al enviar, aceptas que Gofablet se comunique contigo para brindarte el precio de tu reparación.
+        </p>
+      </div>
+    </div>
+
+    <!-- THANK YOU -->
+    <div class="step" id="stepThanks">
+      <div class="thanks-wrap">
+        <div class="thanks-icon">✓</div>
+        <h2 class="thanks-title">¡Cotización enviada!</h2>
+        <p class="thanks-sub">
+          Recibimos tu solicitud. Un especialista de Gofablet te escribirá por WhatsApp con el precio exacto en los próximos minutos.
+        </p>
+        <div class="thanks-highlights">
+          <span class="thanks-chip">⚡ Respuesta rápida</span>
+          <span class="thanks-chip">🛡️ Garantía incluida</span>
+          <span class="thanks-chip">📍 En tu ciudad</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- Trust Bar -->
+  <div class="trust-bar" id="trustBar">
+    <div class="trust-item">✓ Más de 5,000 reparaciones</div>
+    <div class="trust-item">✓ Garantía en cada servicio</div>
+    <div class="trust-item">✓ Técnicos certificados</div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ================================================
+//  CONFIGURATION
+// ================================================
+const CONFIG = {
+  PIXEL_ID: '1143337055789110',
+  MAKE_WEBHOOK: 'https://hook.us2.make.com/ysd5aykr4sj03c3ahp8w9culriv95b42',
+  COUNTRY_CODE: '+502'
+};
+
+// ================================================
+//  UTM & TRACKING HELPERS
+// ================================================
+function getUTMs() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   params.get('utm_source')   || '',
+    utm_medium:   params.get('utm_medium')   || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content:  params.get('utm_content')  || '',
+    utm_term:     params.get('utm_term')     || ''
+  };
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : '';
+}
+
+function getFBC() {
+  // Priority: _fbc cookie → fbclid in URL
+  const fromCookie = getCookie('_fbc');
+  if (fromCookie) return fromCookie;
+
+  const params = new URLSearchParams(window.location.search);
+  const fbclid = params.get('fbclid');
+  if (fbclid) {
+    const ts = Math.floor(Date.now() / 1000);
+    const fbc = `fb.1.${ts}.${fbclid}`;
+    // Persist it as a session cookie
+    document.cookie = `_fbc=${fbc}; path=/; SameSite=Lax`;
+    return fbc;
+  }
+  return '';
+}
+
+function getFBP() {
+  // _fbp is set automatically by fbevents.js — just read it
+  return getCookie('_fbp');
+}
+
+function getEventID() {
+  return 'gfb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// Wait briefly for fbq to set _fbp cookie, then read
+function waitForFBP(cb, tries = 0) {
+  const fbp = getFBP();
+  if (fbp || tries > 10) { cb(fbp); return; }
+  setTimeout(() => waitForFBP(cb, tries + 1), 300);
+}
+
+// ================================================
+//  PIXEL EVENT FIRING
+// ================================================
+function firePixelEvent(eventName, params = {}) {
+  if (typeof fbq !== 'undefined') {
+    const eventID = getEventID();
+    fbq('track', eventName, params, { eventID });
+    return eventID;
+  }
+  return null;
+}
+
+function fireCustomEvent(eventName, params = {}) {
+  if (typeof fbq !== 'undefined') {
+    const eventID = getEventID();
+    fbq('trackCustom', eventName, params, { eventID });
+    return eventID;
+  }
+  return null;
+}
+
+// ================================================
+//  STATE
+// ================================================
+const state = {
+  device: '',
+  brand:  '',
+  model:  '',
+  service: '',
+  step:   1,
+  fbp:    '',
+  fbc:    '',
+  utms:   {}
+};
+
+// Capture on load
+waitForFBP(fbp => { state.fbp = fbp; });
+state.fbc  = getFBC();
+state.utms = getUTMs();
+
+// ================================================
+//  DATA: Brands + Models per device
+// ================================================
+const DATA = {
+  'Teléfono': {
+    'Apple':   { emoji:'🍎', models:['iPhone 15 Pro Max','iPhone 15 Pro','iPhone 15 Plus','iPhone 15','iPhone 14 Pro Max','iPhone 14 Pro','iPhone 14 Plus','iPhone 14','iPhone 13 Pro Max','iPhone 13 Pro','iPhone 13','iPhone 13 Mini','iPhone 12 Pro Max','iPhone 12 Pro','iPhone 12','iPhone 12 Mini','iPhone 11 Pro Max','iPhone 11 Pro','iPhone 11','iPhone XS Max','iPhone XS','iPhone XR','iPhone X','iPhone SE (3ra)','iPhone SE (2da)','iPhone 8 Plus','iPhone 8','iPhone 7 Plus','iPhone 7'] },
+    'Samsung': { emoji:'🌀', models:['Galaxy S24 Ultra','Galaxy S24+','Galaxy S24','Galaxy S23 Ultra','Galaxy S23+','Galaxy S23','Galaxy S22 Ultra','Galaxy S22+','Galaxy S22','Galaxy S21 Ultra','Galaxy S21+','Galaxy S21','Galaxy A54 5G','Galaxy A34 5G','Galaxy A24','Galaxy A14','Galaxy A05s','Galaxy Z Fold 5','Galaxy Z Flip 5','Galaxy Z Flip 4','Galaxy Note 20 Ultra','Galaxy Note 10+'] },
+    'Xiaomi':  { emoji:'🔴', models:['Xiaomi 13T Pro','Xiaomi 13T','Xiaomi 13 Pro','Xiaomi 13','Redmi Note 13 Pro+','Redmi Note 13 Pro','Redmi Note 13','Redmi Note 12 Pro+','Redmi Note 12','Redmi Note 11','Redmi 13C','Redmi 12','Redmi 10','POCO X6 Pro','POCO X5 Pro','POCO M5','POCO F5'] },
+    'Motorola':{ emoji:'📐', models:['Edge 50 Pro','Edge 40 Pro','Edge 40','Moto G84','Moto G54','Moto G34','Moto G24','Moto G14','Moto G62','Moto G52','Moto G42','Moto G32','Moto G22','Moto E40','Moto E22'] },
+    'Huawei':  { emoji:'🌸', models:['P60 Pro','P50 Pro','P40 Pro+','P40 Pro','P40 Lite','Mate 50 Pro','Mate 40 Pro','Mate 30 Pro','Nova 12 Pro','Nova 11 Pro','Nova 9','Nova 8','Y9s','Y7a','Y6p'] },
+    'Oppo':    { emoji:'🟢', models:['Find X7 Ultra','Find X6 Pro','Reno 10 Pro+','Reno 10 Pro','Reno 10','Reno 8 Pro','A98 5G','A78','A58','A17','A16'] },
+    'vivo':    { emoji:'🔵', models:['X100 Pro','X90 Pro','V29 Pro','V29','V27 Pro','V27','Y36','Y22s','Y16','Y02'] },
+    'OnePlus': { emoji:'⚡', models:['12','11','Nord 3','Nord CE 3 Lite','Nord CE 3','10 Pro','9 Pro','9'] },
+    'Realme':  { emoji:'💫', models:['GT 5 Pro','GT Neo 5','11 Pro+','11 Pro','11','10 Pro+','10','C55','C51','C35','C33'] },
+    'Sony':    { emoji:'🎯', models:['Xperia 1 V','Xperia 5 V','Xperia 10 V','Xperia 1 IV','Xperia 5 IV','Xperia 10 IV'] },
+    'Otro':    { emoji:'📱', models:['Otro modelo'] }
+  },
+  'Tablet': {
+    'Apple':   { emoji:'🍎', models:['iPad Pro 13" M4','iPad Pro 11" M4','iPad Pro 12.9" M2','iPad Pro 11" M2','iPad Air M2','iPad Air M1','iPad (10ma Gen)','iPad (9na Gen)','iPad Mini 6','iPad Mini 5'] },
+    'Samsung': { emoji:'🌀', models:['Galaxy Tab S9 Ultra','Galaxy Tab S9+','Galaxy Tab S9','Galaxy Tab S8 Ultra','Galaxy Tab S8+','Galaxy Tab S8','Galaxy Tab A9+','Galaxy Tab A9','Galaxy Tab A8','Galaxy Tab A7'] },
+    'Lenovo':  { emoji:'⚫', models:['Tab P12 Pro','Tab P11 Pro','Tab P11','Tab M10 Plus','Tab M10','Tab M9','Tab M8'] },
+    'Xiaomi':  { emoji:'🔴', models:['Pad 6 Pro','Pad 6','Pad 5 Pro','Pad 5','Redmi Pad SE','Redmi Pad'] },
+    'Huawei':  { emoji:'🌸', models:['MatePad Pro 13.2','MatePad Pro 11','MatePad 11.5','MatePad SE'] },
+    'Microsoft':{ emoji:'🪟', models:['Surface Pro 9','Surface Pro 8','Surface Pro 7+','Surface Pro 7','Surface Go 3','Surface Go 2'] },
+    'Otro':    { emoji:'📟', models:['Otro modelo'] }
+  },
+  'Computadora': {
+    'Apple':   { emoji:'🍎', models:['MacBook Pro 16" M3','MacBook Pro 14" M3','MacBook Pro 16" M2','MacBook Pro 14" M2','MacBook Air 15" M2','MacBook Air M2','MacBook Air M1','MacBook Pro 13" M2','MacBook Pro 13" M1','MacBook Pro 16" Intel','MacBook Pro 15" Intel','MacBook Pro 13" Intel','iMac 24" M3','iMac 24" M1','Mac Mini M2','Mac Mini M1'] },
+    'Dell':    { emoji:'🔷', models:['XPS 15','XPS 14','XPS 13','Inspiron 16','Inspiron 15','Inspiron 14','Latitude 5540','Latitude 5440','Latitude 7440','Vostro 5630','Vostro 3530','G16 Gaming','G15 Gaming'] },
+    'HP':      { emoji:'🔵', models:['Spectre x360 16','Spectre x360 14','Envy 16','Envy 15','Envy 14','Pavilion 15','Pavilion 14','EliteBook 840','EliteBook 850','ProBook 450','Omen 16','Victus 16','Victus 15'] },
+    'Lenovo':  { emoji:'⚫', models:['ThinkPad X1 Carbon','ThinkPad X1 Yoga','ThinkPad T14s','ThinkPad E14','IdeaPad 5 Pro','IdeaPad 5','IdeaPad 3','Yoga 9i','Yoga 7i','Yoga 6','Legion 5 Pro','Legion 5','Legion Slim 5'] },
+    'Asus':    { emoji:'🔶', models:['ZenBook Pro 16X','ZenBook 14 OLED','ZenBook 14','VivoBook Pro 16','VivoBook 15','VivoBook 14','ExpertBook B9','ROG Zephyrus G16','ROG Zephyrus G14','ROG Strix G18','TUF Gaming F15'] },
+    'Microsoft':{ emoji:'🪟', models:['Surface Laptop 5','Surface Laptop 4','Surface Laptop Studio 2','Surface Book 3','Surface Pro 9'] },
+    'Acer':    { emoji:'⭕', models:['Swift 5','Swift 3','Aspire 5','Aspire 3','Nitro 5','Predator Helios 16','Predator Helios 300','Chromebook 514'] },
+    'MSI':     { emoji:'🐉', models:['Raider GE78','Titan GT77','Stealth 15M','Creator Z17','Prestige 16','Modern 15'] },
+    'Otro':    { emoji:'💻', models:['Otro modelo'] }
+  },
+  'Smartwatch': {
+    'Apple':   { emoji:'🍎', models:['Apple Watch Ultra 2','Apple Watch Series 9','Apple Watch Series 8','Apple Watch SE (2da)','Apple Watch Series 7','Apple Watch Series 6','Apple Watch SE (1ra)','Apple Watch Series 5','Apple Watch Series 4'] },
+    'Samsung': { emoji:'🌀', models:['Galaxy Watch 6 Classic','Galaxy Watch 6','Galaxy Watch 5 Pro','Galaxy Watch 5','Galaxy Watch 4 Classic','Galaxy Watch 4','Galaxy Watch 3'] },
+    'Garmin':  { emoji:'🟠', models:['Fenix 7X','Fenix 7','Epix Pro','Venu 3S','Venu 3','Forerunner 965','Forerunner 265','Vivoactive 5'] },
+    'Fitbit':  { emoji:'💚', models:['Sense 2','Versa 4','Versa 3','Charge 6','Charge 5','Inspire 3'] },
+    'Xiaomi':  { emoji:'🔴', models:['Watch S3','Watch S2','Watch S1 Pro','Mi Watch','Redmi Watch 4','Redmi Watch 3'] },
+    'Huawei':  { emoji:'🌸', models:['Watch GT 4','Watch GT 3 Pro','Watch GT 3','Watch 4 Pro','Watch 4','Watch Fit 3'] },
+    'Otro':    { emoji:'⌚', models:['Otro modelo'] }
+  }
+};
+
+const SERVICES = {
+  'Teléfono': [
+    { id:'pantalla',   emoji:'📱', name:'Pantalla rota',    desc:'Display dañado, manchas, touch sin respuesta' },
+    { id:'bateria',    emoji:'🔋', name:'Batería',           desc:'Se agota rápido, no carga, se infla' },
+    { id:'camara',     emoji:'📸', name:'Cámara',            desc:'Fotos borrosas, lente roto, no funciona' },
+    { id:'carga',      emoji:'⚡', name:'Puerto de carga',   desc:'No carga, conector flojo o roto' },
+    { id:'agua',       emoji:'💧', name:'Daño por agua',     desc:'Cayó al agua, no enciende, parpadea' },
+    { id:'botones',    emoji:'🔘', name:'Botones',           desc:'Volumen, inicio o encendido sin respuesta' },
+    { id:'audio',      emoji:'🎵', name:'Audio / Altavoz',   desc:'Sin sonido, micrófono dañado, auricular' },
+    { id:'otro',       emoji:'🔧', name:'Otro problema',     desc:'No aparece en la lista' }
+  ],
+  'Tablet': [
+    { id:'pantalla',   emoji:'📱', name:'Pantalla rota',    desc:'Vidrio quebrado, display dañado' },
+    { id:'bateria',    emoji:'🔋', name:'Batería',           desc:'No dura, no carga o se infla' },
+    { id:'camara',     emoji:'📸', name:'Cámara',            desc:'Fotos borrosas o no funciona' },
+    { id:'carga',      emoji:'⚡', name:'Puerto de carga',   desc:'No carga o conector dañado' },
+    { id:'agua',       emoji:'💧', name:'Daño por agua',     desc:'Contacto con líquidos' },
+    { id:'audio',      emoji:'🎵', name:'Audio / Altavoz',   desc:'Sin sonido o bajo volumen' },
+    { id:'botones',    emoji:'🔘', name:'Botones',           desc:'Botones sin respuesta' },
+    { id:'otro',       emoji:'🔧', name:'Otro problema',     desc:'No aparece en la lista' }
+  ],
+  'Computadora': [
+    { id:'pantalla',   emoji:'🖥️', name:'Pantalla',          desc:'Pantalla rota, líneas, sin imagen' },
+    { id:'bateria',    emoji:'🔋', name:'Batería',           desc:'No dura, no carga o inflamada' },
+    { id:'teclado',    emoji:'⌨️', name:'Teclado',           desc:'Teclas sin respuesta o dañadas' },
+    { id:'sistema',    emoji:'💾', name:'Sistema / Software', desc:'No enciende, pantalla azul, lento' },
+    { id:'agua',       emoji:'💧', name:'Daño por agua',     desc:'Líquido derramado, no enciende' },
+    { id:'disco',      emoji:'💿', name:'Disco duro / SSD',  desc:'Datos perdidos, disco dañado' },
+    { id:'carga',      emoji:'⚡', name:'Cargador / Puerto', desc:'No carga, puerto dañado' },
+    { id:'otro',       emoji:'🔧', name:'Otro problema',     desc:'No aparece en la lista' }
+  ],
+  'Smartwatch': [
+    { id:'pantalla',   emoji:'⌚', name:'Pantalla rota',    desc:'Vidrio quebrado o display dañado' },
+    { id:'bateria',    emoji:'🔋', name:'Batería',           desc:'No dura o no carga' },
+    { id:'corona',     emoji:'🔘', name:'Corona / Botón',   desc:'No responde o está dañado' },
+    { id:'correa',     emoji:'📿', name:'Correa / Band',    desc:'Correa rota o deteriorada' },
+    { id:'agua',       emoji:'💧', name:'Daño por agua',    desc:'Daño por líquidos' },
+    { id:'software',   emoji:'💾', name:'Software',         desc:'No enciende, pantalla congelada' },
+    { id:'otro',       emoji:'🔧', name:'Otro problema',    desc:'No aparece en la lista' }
+  ]
+};
+
+// ================================================
+//  UI HELPERS
+// ================================================
+function updateProgress(step) {
+  const pcts = { 1: '25%', 2: '50%', 3: '75%', 4: '100%', 5: '100%' };
+  document.getElementById('progressFill').style.width = pcts[step] || '25%';
+  [1,2,3,4].forEach(i => {
+    document.getElementById('lbl' + i).classList.toggle('active', i <= step);
+  });
+  // Hide progress on thanks
+  document.getElementById('progressWrap').style.display = step === 5 ? 'none' : '';
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const map = { 1: 'step1', 2: 'step2', 3: 'step3', 4: 'step4', 5: 'stepThanks' };
+  document.getElementById(map[n]).classList.add('active');
+  updateProgress(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep(n) { showStep(n); state.step = n; }
+
+// ================================================
+//  STEP 1: DEVICE SELECTION
+// ================================================
+function selectDevice(device) {
+  state.device  = device;
+  state.brand   = '';
+  state.model   = '';
+  state.service = '';
+  state.serviceName = '';
+  state.selectedServices = [];
+
+  // Pixel event
+  fireCustomEvent('SelectDevice', { device_type: device });
+
+  // Update UI
+  document.querySelectorAll('.device-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  document.getElementById('step2DeviceName').textContent = device;
+  renderBrands();
+  showBrandPicker();
+  goToStep(2);
+}
+
+// ================================================
+//  STEP 2: BRAND + MODEL
+// ================================================
+let allBrands = [];
+
+function renderBrands() {
+  const brands = DATA[state.device] || {};
+  allBrands = Object.keys(brands);
+  renderBrandGrid(allBrands);
+}
+
+function renderBrandGrid(brands) {
+  const grid = document.getElementById('brandGrid');
+  const deviceData = DATA[state.device] || {};
+  grid.innerHTML = brands.map(b => `
+    <button class="brand-btn ${state.brand === b ? 'selected' : ''}"
+            onclick="selectBrand('${b}')">
+      <span class="brand-logo">${deviceData[b].emoji}</span>
+      <span class="brand-label">${b}</span>
+    </button>
+  `).join('');
+}
+
+function filterBrands(val) {
+  const filtered = allBrands.filter(b => b.toLowerCase().includes(val.toLowerCase()));
+  renderBrandGrid(filtered);
+}
+
+function selectBrand(brand) {
+  state.brand = brand;
+  state.model = '';
+  document.getElementById('modelSectionLabel').textContent = `Modelos ${brand}`;
+  document.getElementById('modelSearch').value = '';
+  renderModels(DATA[state.device][brand].models);
+  showModelPicker();
+
+  // Pixel event
+  fireCustomEvent('SelectBrand', { device: state.device, brand });
+}
+
+let currentModels = [];
+
+function renderModels(models) {
+  currentModels = models;
+  const list = document.getElementById('modelList');
+  let html = models.map((m, i) => `
+    <button class="model-btn ${state.model === m ? 'selected' : ''}"
+            data-model="${i}"
+            onclick="selectModelByIndex(${i})">
+      ${m} <span class="chevron">›</span>
+    </button>
+  `).join('');
+  if (!models.includes('Otro modelo')) {
+    html += `
+      <button class="model-btn" onclick="selectModel('Otro modelo')" style="border-style:dashed;color:var(--muted);">
+        🔧 Mi modelo no está aquí <span class="chevron">›</span>
+      </button>
+    `;
+  }
+  list.innerHTML = html;
+}
+
+function filterModels(val) {
+  const filtered = currentModels.filter(m => m.toLowerCase().includes(val.toLowerCase()));
+  const list = document.getElementById('modelList');
+  if (filtered.length === 0 && val.trim() !== '') {
+    list.innerHTML = `
+      <button class="model-btn" onclick="selectCustomModel('${val.trim().replace(/'/g, "\\'")}')">
+        Usar "<strong>${val.trim()}</strong>" como modelo <span class="chevron">›</span>
+      </button>
+    `;
+  } else {
+    list.innerHTML = filtered.map(m => {
+      const i = currentModels.indexOf(m);
+      return `<button class="model-btn ${state.model === m ? 'selected' : ''}"
+              onclick="selectModelByIndex(${i})">
+        ${m} <span class="chevron">›</span>
+      </button>`;
+    }).join('');
+  }
+}
+
+function selectCustomModel(val) {
+  selectModel(val);
+}
+
+function selectModelByIndex(i) {
+  selectModel(currentModels[i]);
+}
+
+function selectModel(model) {
+  state.model = model;
+
+  // Pixel ViewContent event
+  firePixelEvent('ViewContent', {
+    content_name: `${state.brand} ${model}`,
+    content_category: state.device,
+    content_type: 'product'
+  });
+
+  // Populate step 3
+  document.getElementById('step3DeviceSummary').textContent =
+    `${state.brand} ${model}`;
+  renderServices();
+  goToStep(3);
+}
+
+function showBrandPicker() {
+  document.getElementById('brandPicker').style.display = '';
+  document.getElementById('modelPicker').style.display = 'none';
+  document.getElementById('brandSearch').value = '';
+  renderBrands();
+}
+
+function showModelPicker() {
+  document.getElementById('brandPicker').style.display = 'none';
+  document.getElementById('modelPicker').style.display = '';
+}
+
+// ================================================
+//  STEP 3: SERVICE SELECTION
+// ================================================
+function renderServices() {
+  const services = SERVICES[state.device] || SERVICES['Teléfono'];
+  const grid = document.getElementById('serviceGrid');
+  grid.innerHTML = services.map(s => `
+    <div class="service-card ${state.selectedServices && state.selectedServices.find(x=>x.id===s.id) ? 'selected' : ''}"
+         onclick="selectService('${s.id}', '${s.name}')">
+      <span class="service-emoji">${s.emoji}</span>
+      <div class="service-info">
+        <div class="service-name">${s.name}</div>
+        <div class="service-desc">${s.desc}</div>
+      </div>
+      <div class="service-check">✓</div>
+    </div>
+  `).join('');
+  updateServiceCounter();
+}
+
+function updateServiceCounter() {
+  const count = (state.selectedServices || []).length;
+  const counter = document.getElementById('serviceCounter');
+  if (count === 0) {
+    counter.textContent = 'Puedes elegir hasta 3 reparaciones';
+    counter.style.color = 'var(--muted)';
+  } else {
+    counter.textContent = `${count} seleccionada${count > 1 ? 's' : ''} — ${3 - count > 0 ? `puedes agregar ${3-count} más` : 'máximo alcanzado'}`;
+    counter.style.color = 'var(--brand)';
+  }
+}
+
+function selectService(id, name) {
+  if (!state.selectedServices) state.selectedServices = [];
+  const idx = state.selectedServices.findIndex(x => x.id === id);
+
+  if (idx > -1) {
+    // Deselect
+    state.selectedServices.splice(idx, 1);
+  } else {
+    // Select (max 3)
+    if (state.selectedServices.length >= 3) return;
+    state.selectedServices.push({ id, name });
+  }
+
+  // Keep legacy fields for compatibility
+  state.service     = state.selectedServices.map(x => x.id).join(', ');
+  state.serviceName = state.selectedServices.map(x => x.name).join(', ');
+
+  renderServices();
+  document.getElementById('serviceError').classList.remove('show');
+
+  fireCustomEvent('SelectService', {
+    device: state.device,
+    brand: state.brand,
+    model: state.model,
+    services: state.serviceName
+  });
+}
+
+function goToStep4() {
+  if (!state.selectedServices || state.selectedServices.length === 0) {
+    document.getElementById('serviceError').classList.add('show');
+    return;
+  }
+
+  // Update summary
+  document.getElementById('sumDevice').textContent  = state.device;
+  document.getElementById('sumModel').textContent   = `${state.brand} ${state.model}`;
+  document.getElementById('sumService').textContent = state.serviceName;
+
+  // Pixel InitiateCheckout
+  firePixelEvent('InitiateCheckout', {
+    content_name: `Reparación ${state.device}`,
+    content_category: state.service
+  });
+
+  goToStep(4);
+}
+
+// ================================================
+//  STEP 4: FORM SUBMIT
+// ================================================
+async function submitForm() {
+  const name  = document.getElementById('inputName').value.trim();
+  const phone = document.getElementById('inputPhone').value.trim().replace(/\D/g,'');
+
+  if (!name || phone.length < 7) {
+    document.getElementById('formError').classList.add('show');
+    return;
+  }
+  document.getElementById('formError').classList.remove('show');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.innerHTML = '&nbsp;Enviando...&nbsp;';
+
+  // Capture fbp at submit time (it may have been set after page load)
+  const fbp = getFBP() || state.fbp;
+  const fbc = getFBC() || state.fbc;
+
+  // Unique event ID (shared with CAPI via Make.com)
+  const eventID = getEventID();
+
+  // ── Browser-side Pixel Lead event ──
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead', {
+      content_name:     'Cotizador Gofablet',
+      content_category: state.device,
+    }, { eventID });
+  }
+
+  // ── Split name into first + last for better CAPI matching ──
+  const nameParts = name.split(/\s+/);
+  const firstName = nameParts[0] || name;
+  const lastName  = nameParts.slice(1).join(' ') || '';
+
+  // ── Try to get client IP (best effort) ──
+  let clientIP = '';
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    clientIP = ipData.ip || '';
+  } catch(e) { /* ignore */ }
+
+  // ── Build payload for Make.com ──
+  const payload = {
+    // Lead data
+    nombre:      name,
+    nombre_fn:   firstName,
+    nombre_ln:   lastName,
+    telefono:    CONFIG.COUNTRY_CODE + phone,
+    dispositivo: state.device,
+    marca:       state.brand,
+    modelo:      state.model,
+    reparacion:  state.serviceName,
+    // Tracking
+    fbp,
+    fbc,
+    event_id:    eventID,
+    // UTMs
+    ...state.utms,
+    // Meta CAPI extras
+    user_agent:  navigator.userAgent,
+    client_ip:   clientIP,
+    country:     'gt',
+    // Timestamp en Unix segundos — crítico para Meta CAPI
+    event_time:  Math.floor(Date.now() / 1000),
+    // Meta
+    page_url:    window.location.href,
+    timestamp:   new Date().toISOString()
+  };
+
+  try {
+    await fetch(CONFIG.MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.warn('Webhook error:', err);
+    // Still show thank you — don't block UX
+  }
+
+  // Show thank you
+  showStep(5);
+  document.getElementById('trustBar').style.display = 'none';
+}
+
+// ================================================
+//  INIT
+// ================================================
+// Fire ViewContent on page load (step 1)
+window.addEventListener('load', () => {
+  waitForFBP(fbp => {
+    state.fbp = fbp;
+    console.log('[Gofablet Tracking] fbp:', fbp, '| fbc:', state.fbc, '| utms:', state.utms);
+  });
+});
+</script>
+</body>
+</html>
