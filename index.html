@@ -735,9 +735,15 @@
         </div>
 
         <!-- Form -->
-        <div class="field">
-          <label for="inputName">Tu nombre completo *</label>
-          <input type="text" id="inputName" placeholder="Ej. María García" autocomplete="name">
+        <div style="display:flex;gap:10px">
+          <div class="field" style="flex:1">
+            <label for="inputFirstName">Nombre *</label>
+            <input type="text" id="inputFirstName" placeholder="Ej. María" autocomplete="given-name">
+          </div>
+          <div class="field" style="flex:1">
+            <label for="inputLastName">Apellido *</label>
+            <input type="text" id="inputLastName" placeholder="Ej. García" autocomplete="family-name">
+          </div>
         </div>
         <div class="field">
           <label for="inputPhone">Tu número de WhatsApp *</label>
@@ -747,8 +753,13 @@
           </div>
           <div class="field-hint">Te contactaremos por aquí con la cotización</div>
         </div>
+        <div class="field">
+          <label for="inputEmail">Correo electrónico <span style="font-weight:400;color:var(--muted)">(opcional)</span></label>
+          <input type="email" id="inputEmail" placeholder="tu@correo.com" autocomplete="email">
+          <div class="field-hint">📩 Si no te logramos contactar, te enviaremos tu cotización por correo para que la tengas disponible cuando quieras</div>
+        </div>
 
-        <p class="error-msg" id="formError">Por favor completa nombre y teléfono</p>
+        <p class="error-msg" id="formError">Por favor completa nombre, apellido y teléfono</p>
 
         <div class="btn-row" style="margin-top:16px">
           <button class="btn-primary" id="submitBtn" onclick="submitForm()">
@@ -777,6 +788,21 @@
           <span class="thanks-chip">⚡ Respuesta rápida</span>
           <span class="thanks-chip">🛡️ Garantía incluida</span>
           <span class="thanks-chip">📍 En tu ciudad</span>
+        </div>
+
+        <!-- Email capture (only shows if they didn't provide email in form) -->
+        <div id="thanksEmailBox" style="display:none;margin-top:28px;padding:20px 24px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);text-align:left;">
+          <p style="font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:4px;">📩 ¿Quieres recibir tu cotización por correo?</p>
+          <p style="font-size:.78rem;color:var(--muted);margin-bottom:12px;line-height:1.4;">Si no te logramos contactar por WhatsApp, te la enviaremos por correo para que la tengas disponible cuando quieras.</p>
+          <div style="display:flex;gap:8px;">
+            <input type="email" id="thanksEmail" placeholder="tu@correo.com" autocomplete="email"
+              style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.85rem;font-weight:500;color:var(--text);background:var(--white);outline:none;">
+            <button onclick="submitThanksEmail()" id="thanksEmailBtn"
+              style="padding:10px 18px;background:var(--brand);color:white;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;">
+              Enviar
+            </button>
+          </div>
+          <p id="thanksEmailOk" style="display:none;font-size:.78rem;color:var(--success);font-weight:600;margin-top:8px;">✓ ¡Listo! Te enviaremos tu cotización por correo.</p>
         </div>
       </div>
     </div>
@@ -1076,6 +1102,7 @@ let currentModels = [];
 function renderModels(models) {
   currentModels = models;
   const list = document.getElementById('modelList');
+  // Build model buttons
   let html = models.map((m, i) => `
     <button class="model-btn ${state.model === m ? 'selected' : ''}"
             data-model="${i}"
@@ -1083,6 +1110,7 @@ function renderModels(models) {
       ${m} <span class="chevron">›</span>
     </button>
   `).join('');
+  // Always add "Otro modelo" at the bottom if not already in list
   if (!models.includes('Otro modelo')) {
     html += `
       <button class="model-btn" onclick="selectModel('Otro modelo')" style="border-style:dashed;color:var(--muted);">
@@ -1234,14 +1262,18 @@ function goToStep4() {
 //  STEP 4: FORM SUBMIT
 // ================================================
 async function submitForm() {
-  const name  = document.getElementById('inputName').value.trim();
-  const phone = document.getElementById('inputPhone').value.trim().replace(/\D/g,'');
+  const firstName = document.getElementById('inputFirstName').value.trim();
+  const lastName  = document.getElementById('inputLastName').value.trim();
+  const phone     = document.getElementById('inputPhone').value.trim().replace(/\D/g,'');
+  const email     = document.getElementById('inputEmail').value.trim();
 
-  if (!name || phone.length < 7) {
+  if (!firstName || !lastName || phone.length < 7) {
     document.getElementById('formError').classList.add('show');
     return;
   }
   document.getElementById('formError').classList.remove('show');
+
+  const name = firstName + ' ' + lastName;
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
@@ -1255,6 +1287,9 @@ async function submitForm() {
   // Unique event ID (shared with CAPI via Make.com)
   const eventID = getEventID();
 
+  // Unix timestamp in seconds for CAPI
+  const eventTime = Math.floor(Date.now() / 1000);
+
   // ── Browser-side Pixel Lead event ──
   if (typeof fbq !== 'undefined') {
     fbq('track', 'Lead', {
@@ -1262,11 +1297,6 @@ async function submitForm() {
       content_category: state.device,
     }, { eventID });
   }
-
-  // ── Split name into first + last for better CAPI matching ──
-  const nameParts = name.split(/\s+/);
-  const firstName = nameParts[0] || name;
-  const lastName  = nameParts.slice(1).join(' ') || '';
 
   // ── Try to get client IP (best effort) ──
   let clientIP = '';
@@ -1283,6 +1313,7 @@ async function submitForm() {
     nombre_fn:   firstName,
     nombre_ln:   lastName,
     telefono:    CONFIG.COUNTRY_CODE + phone,
+    email:       email,
     dispositivo: state.device,
     marca:       state.brand,
     modelo:      state.model,
@@ -1291,18 +1322,22 @@ async function submitForm() {
     fbp,
     fbc,
     event_id:    eventID,
+    event_time:  eventTime,
     // UTMs
     ...state.utms,
-    // Meta CAPI extras
+    // Meta CAPI extras — mejoran calidad de coincidencias
     user_agent:  navigator.userAgent,
     client_ip:   clientIP,
     country:     'gt',
-    // Timestamp en Unix segundos — crítico para Meta CAPI
-    event_time:  Math.floor(Date.now() / 1000),
     // Meta
     page_url:    window.location.href,
     timestamp:   new Date().toISOString()
   };
+
+  // Save refs for thanks-page email capture
+  state.lastPhone = payload.telefono;
+  state.lastNombre = name;
+  state.lastEventID = eventID;
 
   try {
     await fetch(CONFIG.MAKE_WEBHOOK, {
@@ -1318,6 +1353,39 @@ async function submitForm() {
   // Show thank you
   showStep(5);
   document.getElementById('trustBar').style.display = 'none';
+
+  // Show email capture on thanks page if they didn't provide email
+  if (!email) {
+    document.getElementById('thanksEmailBox').style.display = '';
+  }
+}
+
+// ── Thanks page email capture ──
+async function submitThanksEmail() {
+  const emailVal = document.getElementById('thanksEmail').value.trim();
+  if (!emailVal || !emailVal.includes('@')) return;
+
+  const btn = document.getElementById('thanksEmailBtn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    await fetch(CONFIG.MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email_update: true,
+        email: emailVal,
+        telefono: state.lastPhone || '',
+        nombre: state.lastNombre || '',
+        event_id: state.lastEventID || ''
+      })
+    });
+  } catch(e) { /* ignore */ }
+
+  document.getElementById('thanksEmailOk').style.display = '';
+  btn.style.display = 'none';
+  document.getElementById('thanksEmail').disabled = true;
 }
 
 // ================================================
@@ -1333,3 +1401,4 @@ window.addEventListener('load', () => {
 </script>
 </body>
 </html>
+
