@@ -1252,7 +1252,9 @@ function goToStep4() {
   // Pixel InitiateCheckout
   firePixelEvent('InitiateCheckout', {
     content_name: `Reparación ${state.device}`,
-    content_category: state.service
+    content_category: state.service,
+    value: 0,
+    currency: 'GTQ'
   });
 
   goToStep(4);
@@ -1295,6 +1297,8 @@ async function submitForm() {
     fbq('track', 'Lead', {
       content_name:     'Cotizador Gofablet',
       content_category: state.device,
+      value:            0,
+      currency:         'GTQ'
     }, { eventID });
   }
 
